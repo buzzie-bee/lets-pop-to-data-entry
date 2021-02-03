@@ -73,15 +73,6 @@ export const NavBar = () => {
           >
             Progress
           </Link>
-          <Link
-            component={RouterLink}
-            variant="button"
-            color="textPrimary"
-            to="#"
-            className={classes.link}
-          >
-            Link
-          </Link>
         </nav>
         {renderAuthButton()}
       </Toolbar>

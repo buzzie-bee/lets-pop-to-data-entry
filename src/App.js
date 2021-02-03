@@ -6,6 +6,7 @@ import { DataEntry } from './features/DataEntry/DataEntry';
 import { NavBar } from './features/NavBar/NavBar';
 import UserProvider from './firebase/UserProvider';
 import { ImageSelector } from './features/DataEntry/ImageSelector/ImageSelector';
+import { Progress } from './features/Progress/Progress';
 
 function App() {
   const classes = useStyles();
@@ -24,6 +25,9 @@ function App() {
               </Route>
               <Route exact path="/entry/:searchQuery">
                 <ImageSelector />
+              </Route>
+              <Route path="/progress">
+                <Progress />
               </Route>
             </Switch>
           </div>

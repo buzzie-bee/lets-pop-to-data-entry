@@ -26,7 +26,6 @@ export const Column = ({ images, colNum }) => {
           }
 
           const url = img.imageData.url;
-          console.log(classes);
           return (
             <div className={classes.imageContainer}>
               <Image imgClass={classes.image} key={`${url}`} img={img} />

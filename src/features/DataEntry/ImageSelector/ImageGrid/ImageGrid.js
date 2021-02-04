@@ -2,7 +2,7 @@ import { Grid, makeStyles, Paper } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { Column } from './Column';
 
-export const ImageGrid = ({ images, colNum }) => {
+export const ImageGrid = ({ images, colNum, incrementPage }) => {
   const [columns, setColumns] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const classes = useStyles();
@@ -41,7 +41,7 @@ export const ImageGrid = ({ images, colNum }) => {
         <div
           className={classes.overlay}
           onClick={() => {
-            console.log('overlay clicked');
+            incrementPage();
           }}
         >
           <div className={classes.overlayContent}>

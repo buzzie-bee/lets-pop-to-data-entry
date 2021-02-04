@@ -2,7 +2,13 @@ import { Grid, makeStyles, Paper } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { Column } from './Column';
 
-export const ImageGrid = ({ images, colNum, incrementPage }) => {
+export const ImageGrid = ({
+  images,
+  colNum,
+  incrementPage,
+  handleSelect,
+  isSelected,
+}) => {
   const [columns, setColumns] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const classes = useStyles();
@@ -32,9 +38,16 @@ export const ImageGrid = ({ images, colNum, incrementPage }) => {
   }
   return (
     <Paper className={classes.gridContainer}>
-      <Grid container direction="row" justify="center" spacing={1}>
+      <Grid container direction="row" justify="center" spacing={0}>
         {columns.map((images, idx) => (
-          <Column key={`column#${idx}`} images={images} />
+          <Grid item xs={6}>
+            <Column
+              key={`column#${idx}`}
+              images={images}
+              handleSelect={handleSelect}
+              isSelected={isSelected}
+            />
+          </Grid>
         ))}
       </Grid>
       {showOverlay && (

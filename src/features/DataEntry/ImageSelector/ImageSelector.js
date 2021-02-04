@@ -12,11 +12,9 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { stringify } from 'query-string';
 import { db } from '../../../firebase/firebase';
 import { ImageGrid } from './ImageGrid/ImageGrid';
 import { fetchImageIds } from './fetchImageIds';
-import { fetchImage } from './fetchImage';
 import { fetchUnfetchedImages } from './fetchUnfetchedImages';
 
 export const ImageSelector = () => {
@@ -53,6 +51,19 @@ export const ImageSelector = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
+
+  const handleSelect = (img) => {
+    if (selectedImages.filter((sImg) => sImg.id === img.id).length) {
+      const filtered = selectedImages.filter((sImg) => sImg.id !== img.id);
+      setSelectedImages(filtered);
+      return;
+    }
+    setSelectedImages([...selectedImages, img]);
+  };
+
+  const isSelected = (img) => {
+    return selectedImages.filter((sImg) => sImg.id === img.id).length > 0;
+  };
 
   const saveImagesToFirestore = async () => {
     try {
@@ -236,6 +247,8 @@ export const ImageSelector = () => {
           incrementPage={() => {
             setPage(page + 1);
           }}
+          handleSelect={handleSelect}
+          isSelected={isSelected}
         />
       </Container>
     </>

@@ -4,7 +4,7 @@ import { auth } from '../firebase/firebase';
 export const UserContext = createContext({ user: null });
 
 const UserProvider = (props) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({ displayName: '', email: '' });
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       try {

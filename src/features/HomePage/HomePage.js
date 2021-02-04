@@ -11,7 +11,7 @@ export const HomePage = () => {
       <Typography variant="h2" className={classes.headline}>
         Lets Pop To Data Entry
       </Typography>
-      {user ? (
+      {user.displayName.length ? (
         <Typography variant="h5" className={classes.welcome}>
           Welcome {user.displayName.split(' ')[0]}
         </Typography>

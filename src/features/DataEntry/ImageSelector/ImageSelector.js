@@ -14,8 +14,8 @@ import {
 } from '@material-ui/core';
 import { db } from '../../../firebase/firebase';
 import { ImageGrid } from './ImageGrid/ImageGrid';
-import { fetchImageIds } from './fetchImageIds';
-import { fetchUnfetchedImages } from './fetchUnfetchedImages';
+import { fetchImageIds } from './fetchHelpers/fetchImageIds';
+import { fetchUnfetchedImages } from './fetchHelpers/fetchUnfetchedImages';
 
 export const ImageSelector = () => {
   const [images, setImages] = useState([]);

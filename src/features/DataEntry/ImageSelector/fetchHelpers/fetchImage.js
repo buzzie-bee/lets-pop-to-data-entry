@@ -1,4 +1,4 @@
-const { stringify } = require('query-string');
+import { stringify } from 'query-string';
 
 export const fetchImage = async ({ id, setLoading }) => {
   if (!id) {

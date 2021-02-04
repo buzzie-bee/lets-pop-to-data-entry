@@ -12,16 +12,16 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { db } from '../../../firebase/firebase';
 import { ImageGrid } from './ImageGrid/ImageGrid';
 import { fetchImageIds } from './fetchHelpers/fetchImageIds';
 import { fetchUnfetchedImages } from './fetchHelpers/fetchUnfetchedImages';
+import { saveImageDataToFirestore } from './saveImageDataToFirestore';
 
 export const ImageSelector = () => {
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [gatheringImages, setGatheringImages] = useState();
+  const [gatheringImages, setGatheringImages] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [dialogueOpen, setDialogOpen] = useState(false);
@@ -52,6 +52,19 @@ export const ImageSelector = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      fetchImageIds({
+        images,
+        page,
+        searchQuery,
+        setImages,
+        setTotalResults,
+      });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
   const handleSelect = (img) => {
     if (selectedImages.filter((sImg) => sImg.id === img.id).length) {
       const filtered = selectedImages.filter((sImg) => sImg.id !== img.id);
@@ -65,62 +78,20 @@ export const ImageSelector = () => {
     return selectedImages.filter((sImg) => sImg.id === img.id).length > 0;
   };
 
-  const saveImagesToFirestore = async () => {
-    try {
-      const locationsRef = db.collection('locations');
-      const result = await locationsRef.doc(searchQuery).set(
-        {
-          images: selectedImages,
-          imgUrl: selectedImages[0].customWidth,
-        },
-        { merge: true }
-      );
-      if (result === undefined) {
-        console.log('need to implement firestore saving');
-        // const snapshot = await locationsRef
-        //   .where('imgUrl', '==', '')
-        //   .limit(1)
-        //   .get();
-
-        // snapshot.forEach((doc) => {
-        //   const nextDoc = doc.data();
-        //   history.push(`/entry/${nextDoc.query}`);
-        //   setImages([]);
-        //   // setImagesColA([]);
-        //   // setImagesColB([]);
-        //   setSelectedImages([]);
-        //   setLoading(true);
-        //   setTotalResults(0);
-        //   setPage(1);
-        // });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const couldNotFindCorrectImages = async () => {
-    try {
-      const locationsRef = db.collection('locations');
-      const result = await locationsRef.doc(searchQuery).set(
-        {
-          imgUrl: 'NoValidImg',
-        },
-        { merge: true }
-      );
-      if (result === undefined) {
-        const snapshot = await locationsRef
-          .where('imgUrl', '==', '')
-          .limit(1)
-          .get();
-
-        snapshot.forEach((doc) => {
-          //
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
+  const handleSubmit = ({ notFound }) => {
+    saveImageDataToFirestore({
+      saveNotFoundValue: notFound,
+      searchQuery,
+      selectedImages,
+      setImages,
+      setSelectedImages,
+      setLoading,
+      setGatheringImages,
+      setPage,
+      setTotalResults,
+      setDialogOpen,
+      history,
+    });
   };
 
   return (
@@ -170,7 +141,7 @@ export const ImageSelector = () => {
               <Button
                 onClick={() => {
                   console.log(selectedImages);
-                  saveImagesToFirestore();
+                  handleSubmit({ notFound: false });
                 }}
                 size="large"
                 color="primary"
@@ -218,7 +189,7 @@ export const ImageSelector = () => {
                   </Button>
                   <Button
                     onClick={() => {
-                      couldNotFindCorrectImages();
+                      handleSubmit({ notFound: true });
                       setDialogOpen(false);
                     }}
                     color="secondary"

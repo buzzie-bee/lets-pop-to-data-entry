@@ -38,16 +38,20 @@ export const ImageGrid = ({
   }
   return (
     <Paper className={classes.gridContainer}>
-      <Grid container direction="row" justify="center" spacing={0}>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="space-between"
+        spacing={1}
+      >
         {columns.map((images, idx) => (
-          <Grid item xs={6}>
-            <Column
-              key={`column#${idx}`}
-              images={images}
-              handleSelect={handleSelect}
-              isSelected={isSelected}
-            />
-          </Grid>
+          <Column
+            key={`column#${idx}`}
+            images={images}
+            handleSelect={handleSelect}
+            isSelected={isSelected}
+          />
         ))}
       </Grid>
       {showOverlay && (

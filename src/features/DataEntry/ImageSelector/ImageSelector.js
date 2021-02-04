@@ -124,7 +124,7 @@ export const ImageSelector = () => {
   };
 
   return (
-    <>
+    <div>
       <Container maxWidth="lg">
         <Typography variant="h4" className={classes.headline}>
           Select Images
@@ -240,7 +240,7 @@ export const ImageSelector = () => {
           </>
         )}
       </Container>
-      <Container maxWidth="lg" className={classes.imageGrid}>
+      <div className={classes.imageGrid}>
         <ImageGrid
           images={images}
           colNum={2}
@@ -250,8 +250,8 @@ export const ImageSelector = () => {
           handleSelect={handleSelect}
           isSelected={isSelected}
         />
-      </Container>
-    </>
+      </div>
+    </div>
   );
 };
 
@@ -287,5 +287,6 @@ const useStyles = makeStyles((theme) => ({
   },
   imageGrid: {
     marginTop: '16px',
+    padding: '16px',
   },
 }));

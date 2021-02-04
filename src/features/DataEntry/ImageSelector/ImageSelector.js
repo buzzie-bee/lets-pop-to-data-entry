@@ -15,11 +15,14 @@ import {
 import { stringify } from 'query-string';
 import { db } from '../../../firebase/firebase';
 import { ImageGrid } from './ImageGrid/ImageGrid';
+import { fetchImageIds } from './fetchImageIds';
+import { fetchImage } from './fetchImage';
+import { fetchUnfetchedImages } from './fetchUnfetchedImages';
 
 export const ImageSelector = () => {
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [gatheringImages, setGatheringImages] = useState();
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -28,120 +31,25 @@ export const ImageSelector = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const fetchImageIds = async () => {
-    // setLoading(true);
-    try {
-      const url = 'https://www.flickr.com/services/rest/';
-      const params = {
-        method: 'flickr.photos.search',
-        text: searchQuery,
-        api_key: process.env.REACT_APP_FLICKR_KEY,
-        format: 'json',
-        nojsoncallback: 1,
-        license: '1,2,3,4,5,6,7,9,10',
-        sort: 'interestingness-desc',
-        accuracy: '11',
-        safe_search: '1',
-        content_type: '1',
-        media: 'photos',
-        per_page: 10,
-        page: page,
-      };
-      const paramString = stringify(params);
-      const response = await fetch(`${url}?${paramString}`);
-      const imagesResponse = await response.json();
-
-      if (imagesResponse) {
-        if (imagesResponse.photos) {
-          if (imagesResponse.photos.total) {
-            setTotalResults(imagesResponse.photos.total);
-          }
-          if (imagesResponse.photos.photo) {
-            if (Array.isArray(imagesResponse.photos.photo)) {
-              const newPhotos = imagesResponse.photos.photo;
-              setImages([...images, ...newPhotos]);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    // setLoading(false);
-  };
-
   useEffect(() => {
-    console.log('loaded & Query =>', searchQuery);
-    fetchImageIds();
+    fetchImageIds({
+      images,
+      page,
+      searchQuery,
+      setImages,
+      setTotalResults,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchImage = async (id) => {
-    if (!id) {
-      console.log('error no id given');
-      return;
-    }
-    try {
-      const url = 'https://www.flickr.com/services/rest/';
-      const params = {
-        method: 'flickr.photos.getSizes',
-        api_key: process.env.REACT_APP_FLICKR_KEY,
-        photo_id: id,
-        format: 'json',
-        nojsoncallback: 1,
-      };
-      const paramString = stringify(params);
-      const response = await fetch(`${url}?${paramString}`);
-      const imagesResponse = await response.json();
-
-      if (imagesResponse) {
-        if (imagesResponse.sizes) {
-          if (imagesResponse.sizes.size) {
-            if (Array.isArray(imagesResponse.sizes.size)) {
-              const sizes = imagesResponse.sizes.size;
-              const medium = sizes.filter((size) => size.label === 'Medium')[0];
-              const url = medium.source;
-              const flickrUrl = medium.url;
-              const width = medium.width;
-              const height = medium.height;
-              const image = {
-                url,
-                flickrUrl,
-                width,
-                height,
-              };
-              return image;
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    setLoading(false);
-  };
-
-  const fetchUnfetchedImages = async () => {
-    if (!images.length) {
-      return;
-    }
-    setGatheringImages(true);
-    const updatedImages = await Promise.all(
-      images.map(async (img) => {
-        if (!('imageData' in img)) {
-          const imageData = await fetchImage(img.id);
-          img.imageData = imageData;
-          return img;
-        }
-      })
-    );
-    setImages(updatedImages);
-    setGatheringImages(false);
-  };
+  }, [page]);
 
   useEffect(() => {
     if (!gatheringImages) {
-      fetchUnfetchedImages();
+      fetchUnfetchedImages({
+        setImages,
+        images,
+        setGatheringImages,
+        setLoading,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
@@ -322,7 +230,13 @@ export const ImageSelector = () => {
         )}
       </Container>
       <Container maxWidth="lg" className={classes.imageGrid}>
-        <ImageGrid images={images} colNum={2} />
+        <ImageGrid
+          images={images}
+          colNum={2}
+          incrementPage={() => {
+            setPage(page + 1);
+          }}
+        />
       </Container>
     </>
   );

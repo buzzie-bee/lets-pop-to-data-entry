@@ -7,7 +7,6 @@ import { UserContext } from '../../firebase/UserProvider';
 export const NavBar = () => {
   const classes = useStyles();
   const user = useContext(UserContext);
-  console.log(user);
 
   const renderAuthButton = () => {
     if (!user.displayName.length) {

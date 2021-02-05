@@ -8,7 +8,7 @@ export const setAsPendingInFirestore = async ({ searchQuery }) => {
     const locationsRef = db.collection('locations');
     const result = await locationsRef
       .doc(searchQuery)
-      .set({ url: 'pending' }, { merge: true });
+      .set({ imgUrl: 'pending' }, { merge: true });
     if (result === undefined) {
       return;
     }

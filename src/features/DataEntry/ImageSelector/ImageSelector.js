@@ -10,6 +10,7 @@ import {
   DialogContentText,
   DialogTitle,
   makeStyles,
+  TextField,
   Typography,
 } from '@material-ui/core';
 import { ImageGrid } from './ImageGrid/ImageGrid';
@@ -29,6 +30,7 @@ export const ImageSelector = () => {
   const [dialogueOpen, setDialogOpen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const { searchQuery } = useParams();
+  const [tweakedSearch, setTweakedSearch] = useState(searchQuery);
   const classes = useStyles();
   const history = useHistory();
 
@@ -36,7 +38,7 @@ export const ImageSelector = () => {
     fetchImageIds({
       images,
       page,
-      searchQuery,
+      searchQuery: tweakedSearch,
       setImages,
       setTotalResults,
       searchType,
@@ -57,15 +59,13 @@ export const ImageSelector = () => {
   }, [images]);
 
   useEffect(() => {
-    setTimeout(() => {
-      fetchImageIds({
-        images,
-        page,
-        searchQuery,
-        setImages,
-        setTotalResults,
-        searchType,
-      });
+    fetchImageIds({
+      images,
+      page,
+      searchQuery: tweakedSearch,
+      setImages,
+      setTotalResults,
+      searchType,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
@@ -101,6 +101,10 @@ export const ImageSelector = () => {
     } else {
       setSearchType('interestingness-desc');
     }
+    cleanupState();
+  };
+
+  const cleanupState = () => {
     setImages([]);
     setSelectedImages([]);
     setLoading(true);
@@ -112,6 +116,10 @@ export const ImageSelector = () => {
     setTimeout(() => {
       setPage(1);
     }, 1000);
+  };
+
+  const searchTweakedQuery = () => {
+    cleanupState();
   };
 
   const handleSubmit = ({ notFound }) => {
@@ -253,6 +261,29 @@ export const ImageSelector = () => {
                 }}
               >
                 Switch
+              </Button>
+            </div>
+            <div style={{ marginTop: '16px' }}>
+              <Typography variant="body1" display="inline">
+                Modify Search Query{' '}
+              </Typography>
+              <TextField
+                value={tweakedSearch}
+                style={{ marginLeft: '24px' }}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setTweakedSearch(e.target.value);
+                }}
+              />
+              <Button
+                style={{ marginLeft: '24px' }}
+                variant="contained"
+                display="inline"
+                onClick={() => {
+                  searchTweakedQuery();
+                }}
+              >
+                Search
               </Button>
             </div>
           </>

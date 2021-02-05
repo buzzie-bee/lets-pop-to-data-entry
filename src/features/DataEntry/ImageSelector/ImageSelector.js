@@ -86,7 +86,7 @@ export const ImageSelector = () => {
     setShowOverlay(false);
     setTimeout(() => {
       setShowOverlay(true);
-    }, 3000);
+    }, 5000);
   };
 
   const switchSearchType = () => {
@@ -113,14 +113,6 @@ export const ImageSelector = () => {
       saveNotFoundValue: notFound,
       searchQuery,
       selectedImages,
-      setImages,
-      setSelectedImages,
-      setLoading,
-      setGatheringImages,
-      setPage,
-      setTotalResults,
-      setDialogOpen,
-      resetOverlay,
       history,
     });
   };

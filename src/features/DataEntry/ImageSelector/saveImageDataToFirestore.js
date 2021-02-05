@@ -4,14 +4,6 @@ export const saveImageDataToFirestore = async ({
   saveNotFoundValue,
   searchQuery,
   selectedImages,
-  setImages,
-  setSelectedImages,
-  setLoading,
-  setGatheringImages,
-  setPage,
-  setTotalResults,
-  setDialogOpen,
-  resetOverlay,
   history,
 }) => {
   try {
@@ -35,21 +27,8 @@ export const saveImageDataToFirestore = async ({
         .limit(1)
         .get();
       snapshot.forEach((doc) => {
-        setImages([]);
-        setSelectedImages([]);
-        setLoading(true);
-        setGatheringImages(false);
-        setPage(0);
-        setTotalResults(0);
-        setDialogOpen(false);
-        resetOverlay();
-        setTimeout(() => {
-          const nextDoc = doc.data();
-          history.push(`/entry/${nextDoc.query}`);
-        }, 2000);
-        setTimeout(() => {
-          setPage(1);
-        }, 3000);
+        const nextDoc = doc.data();
+        history.push(`/loading/${nextDoc.query}`);
       });
     }
   } catch (e) {

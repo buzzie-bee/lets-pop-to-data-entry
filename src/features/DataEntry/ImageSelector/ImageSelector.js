@@ -15,7 +15,8 @@ import {
 import { ImageGrid } from './ImageGrid/ImageGrid';
 import { fetchImageIds } from './fetchHelpers/fetchImageIds';
 import { fetchUnfetchedImages } from './fetchHelpers/fetchUnfetchedImages';
-import { saveImageDataToFirestore } from './saveImageDataToFirestore';
+import { saveImageDataToFirestore } from './firestoreHelpers/saveImageDataToFirestore';
+import { setAsPendingInFirestore } from './firestoreHelpers/setAsPendingInFirestore';
 
 export const ImageSelector = () => {
   const [images, setImages] = useState([]);
@@ -68,6 +69,10 @@ export const ImageSelector = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
+
+  useEffect(() => {
+    setAsPendingInFirestore({ searchQuery });
+  }, []);
 
   const handleSelect = (img) => {
     if (selectedImages.filter((sImg) => sImg.id === img.id).length) {

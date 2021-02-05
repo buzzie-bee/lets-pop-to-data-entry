@@ -21,7 +21,7 @@ export const fetchImageIds = async ({
       safe_search: '1',
       content_type: '1',
       media: 'photos',
-      per_page: 10,
+      per_page: 20,
       page: page,
     };
     const paramString = stringify(params);

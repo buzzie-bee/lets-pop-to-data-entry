@@ -26,6 +26,7 @@ export const DataEntry = () => {
       const locationsRef = await db.collection('locations');
       const querySnapshot = await locationsRef
         .where('imgUrl', '==', '')
+        .orderBy('occurances', 'desc')
         .limit(10)
         .get();
       querySnapshot.forEach((doc) => {
@@ -76,6 +77,7 @@ export const DataEntry = () => {
                   <TableCell>{document.iata}</TableCell>
                   <TableCell>{document.skyCode}</TableCell>
                   <TableCell>{document.query}</TableCell>
+                  <TableCell>{document.occurances}</TableCell>
                 </TableRow>
               );
             })}

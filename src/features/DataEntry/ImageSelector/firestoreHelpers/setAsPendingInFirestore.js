@@ -1,7 +1,11 @@
 import { db } from '../../../../firebase/firebase';
+import { checkExistsInFirestore } from './checkExistsInFirestore';
 
 export const setAsPendingInFirestore = async ({ searchQuery }) => {
   if (!searchQuery) {
+    return;
+  }
+  if (!checkExistsInFirestore(searchQuery)) {
     return;
   }
   try {

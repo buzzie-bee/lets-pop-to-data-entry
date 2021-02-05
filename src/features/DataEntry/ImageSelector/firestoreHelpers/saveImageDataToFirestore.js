@@ -1,4 +1,5 @@
 import { db } from '../../../../firebase/firebase';
+import { checkExistsInFirestore } from './checkExistsInFirestore';
 
 export const saveImageDataToFirestore = async ({
   saveNotFoundValue,
@@ -7,6 +8,9 @@ export const saveImageDataToFirestore = async ({
   history,
 }) => {
   try {
+    if (!checkExistsInFirestore(searchQuery)) {
+      return;
+    }
     const locationsRef = db.collection('locations');
     const dataPayload = saveNotFoundValue
       ? {
@@ -16,6 +20,7 @@ export const saveImageDataToFirestore = async ({
           images: selectedImages,
           imgUrl: selectedImages[0].imageData.url,
         };
+
     const result = await locationsRef
       .doc(searchQuery)
       .set(dataPayload, { merge: true });

@@ -1,11 +1,12 @@
 const { db } = require('../../../../firebase/firebase');
 
-export const checkExistsInFirestore = (searchQuery) => {
+export const checkExistsInFirestore = async (searchQuery) => {
   try {
-    const doc = db.collection('locations').document(searchQuery);
+    const doc = await db.collection('locations').doc(searchQuery).get();
     if (doc.exists) {
       return true;
     }
+    console.log('doc doesnt exist', searchQuery);
     return false;
   } catch (e) {
     console.log(e);

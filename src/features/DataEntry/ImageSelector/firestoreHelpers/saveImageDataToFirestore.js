@@ -8,7 +8,8 @@ export const saveImageDataToFirestore = async ({
   history,
 }) => {
   try {
-    if (!checkExistsInFirestore(searchQuery)) {
+    const exists = await checkExistsInFirestore(searchQuery);
+    if (!exists) {
       return;
     }
     const locationsRef = db.collection('locations');

@@ -5,7 +5,8 @@ export const setAsPendingInFirestore = async ({ searchQuery }) => {
   if (!searchQuery) {
     return;
   }
-  if (!checkExistsInFirestore(searchQuery)) {
+  const exists = await checkExistsInFirestore(searchQuery);
+  if (!exists) {
     return;
   }
   try {

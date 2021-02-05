@@ -6,6 +6,7 @@ export const fetchImageIds = async ({
   setTotalResults,
   setImages,
   images,
+  searchType,
 }) => {
   try {
     const url = 'https://www.flickr.com/services/rest/';
@@ -16,7 +17,7 @@ export const fetchImageIds = async ({
       format: 'json',
       nojsoncallback: 1,
       license: '1,2,3,4,5,6,7,9,10',
-      sort: 'interestingness-desc',
+      sort: searchType,
       accuracy: '11',
       safe_search: '1',
       content_type: '1',

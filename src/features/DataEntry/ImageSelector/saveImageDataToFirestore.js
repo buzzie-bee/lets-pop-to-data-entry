@@ -39,7 +39,7 @@ export const saveImageDataToFirestore = async ({
         setSelectedImages([]);
         setLoading(true);
         setGatheringImages(false);
-        setPage(1);
+        setPage(0);
         setTotalResults(0);
         setDialogOpen(false);
         resetOverlay();
@@ -47,6 +47,9 @@ export const saveImageDataToFirestore = async ({
           const nextDoc = doc.data();
           history.push(`/entry/${nextDoc.query}`);
         }, 2000);
+        setTimeout(() => {
+          setPage(1);
+        }, 3000);
       });
     }
   } catch (e) {

@@ -20,6 +20,7 @@ import { saveImageDataToFirestore } from './saveImageDataToFirestore';
 export const ImageSelector = () => {
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [searchType, setSearchType] = useState('interestingness-desc');
   const [loading, setLoading] = useState(true);
   const [gatheringImages, setGatheringImages] = useState(false);
   const [page, setPage] = useState(1);
@@ -37,6 +38,7 @@ export const ImageSelector = () => {
       searchQuery,
       setImages,
       setTotalResults,
+      searchType,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
@@ -61,6 +63,7 @@ export const ImageSelector = () => {
         searchQuery,
         setImages,
         setTotalResults,
+        searchType,
       });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,6 +87,25 @@ export const ImageSelector = () => {
     setTimeout(() => {
       setShowOverlay(true);
     }, 3000);
+  };
+
+  const switchSearchType = () => {
+    if (searchType === 'interestingness-desc') {
+      setSearchType('relevance');
+    } else {
+      setSearchType('interestingness-desc');
+    }
+    setImages([]);
+    setSelectedImages([]);
+    setLoading(true);
+    setGatheringImages(false);
+    setPage(0);
+    setTotalResults(0);
+    setDialogOpen(false);
+    resetOverlay();
+    setTimeout(() => {
+      setPage(1);
+    }, 1000);
   };
 
   const handleSubmit = ({ notFound }) => {
@@ -216,6 +238,24 @@ export const ImageSelector = () => {
               <Typography variant="h6" display="inline">
                 {page}
               </Typography>
+            </div>
+            <div style={{ marginTop: '16px' }}>
+              <Typography variant="body1" display="inline">
+                Search Type{' '}
+              </Typography>
+              <Typography variant="h6" display="inline">
+                {searchType}
+              </Typography>
+              <Button
+                style={{ marginLeft: '64px' }}
+                variant="contained"
+                display="inline"
+                onClick={() => {
+                  switchSearchType();
+                }}
+              >
+                Switch
+              </Button>
             </div>
           </>
         )}

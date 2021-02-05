@@ -72,6 +72,7 @@ export const ImageSelector = () => {
 
   useEffect(() => {
     setAsPendingInFirestore({ searchQuery });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSelect = (img) => {

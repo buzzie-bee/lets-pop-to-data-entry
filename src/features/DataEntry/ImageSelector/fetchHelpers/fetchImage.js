@@ -23,11 +23,14 @@ export const fetchImage = async ({ id, setLoading }) => {
         if (imagesResponse.sizes.size) {
           if (Array.isArray(imagesResponse.sizes.size)) {
             const sizes = imagesResponse.sizes.size;
-            const medium = sizes.filter((size) => size.label === 'Medium')[0];
-            const url = medium.source;
-            const flickrUrl = medium.url;
-            const width = medium.width;
-            const height = medium.height;
+            let sizedImage = sizes.filter((size) => size.label === 'Medium')[0];
+            if (!sizedImage) {
+              sizedImage = sizes.filter((size) => size.label === 'Original')[0];
+            }
+            const url = sizedImage.source;
+            const flickrUrl = sizedImage.url;
+            const width = sizedImage.width;
+            const height = sizedImage.height;
             const image = {
               url,
               flickrUrl,

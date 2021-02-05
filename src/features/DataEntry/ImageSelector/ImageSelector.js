@@ -25,6 +25,7 @@ export const ImageSelector = () => {
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [dialogueOpen, setDialogOpen] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
   const { searchQuery } = useParams();
   const classes = useStyles();
   const history = useHistory();
@@ -78,6 +79,13 @@ export const ImageSelector = () => {
     return selectedImages.filter((sImg) => sImg.id === img.id).length > 0;
   };
 
+  const resetOverlay = () => {
+    setShowOverlay(false);
+    setTimeout(() => {
+      setShowOverlay(true);
+    }, 3000);
+  };
+
   const handleSubmit = ({ notFound }) => {
     saveImageDataToFirestore({
       saveNotFoundValue: notFound,
@@ -90,6 +98,7 @@ export const ImageSelector = () => {
       setPage,
       setTotalResults,
       setDialogOpen,
+      resetOverlay,
       history,
     });
   };
@@ -220,6 +229,8 @@ export const ImageSelector = () => {
           }}
           handleSelect={handleSelect}
           isSelected={isSelected}
+          showOverlay={showOverlay}
+          setShowOverlay={setShowOverlay}
         />
       </div>
     </div>

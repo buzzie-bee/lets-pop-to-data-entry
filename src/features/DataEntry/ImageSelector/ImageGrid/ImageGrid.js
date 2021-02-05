@@ -8,9 +8,10 @@ export const ImageGrid = ({
   incrementPage,
   handleSelect,
   isSelected,
+  showOverlay,
+  setShowOverlay,
 }) => {
   const [columns, setColumns] = useState([]);
-  const [showOverlay, setShowOverlay] = useState(false);
   const classes = useStyles();
 
   const sortColumns = (num) => {

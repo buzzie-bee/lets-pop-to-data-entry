@@ -11,6 +11,7 @@ export const saveImageDataToFirestore = async ({
   setPage,
   setTotalResults,
   setDialogOpen,
+  resetOverlay,
   history,
 }) => {
   try {
@@ -30,6 +31,7 @@ export const saveImageDataToFirestore = async ({
     if (result === undefined) {
       const snapshot = await locationsRef
         .where('imgUrl', '==', '')
+        .orderBy('occurances', 'desc')
         .limit(1)
         .get();
       snapshot.forEach((doc) => {
@@ -40,6 +42,7 @@ export const saveImageDataToFirestore = async ({
         setPage(1);
         setTotalResults(0);
         setDialogOpen(false);
+        resetOverlay();
         setTimeout(() => {
           const nextDoc = doc.data();
           history.push(`/entry/${nextDoc.query}`);

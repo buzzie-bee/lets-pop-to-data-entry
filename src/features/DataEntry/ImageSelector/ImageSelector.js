@@ -67,6 +67,7 @@ export const ImageSelector = () => {
         ids.push(img.id);
         return true;
       }
+      return false;
     });
     if (images.length === filteredDuplicates.length) {
       return;

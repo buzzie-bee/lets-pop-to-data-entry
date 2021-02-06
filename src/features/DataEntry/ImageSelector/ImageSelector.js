@@ -58,6 +58,22 @@ export const ImageSelector = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
 
+  // Cleanup images
+  useEffect(() => {
+    const ids = [];
+
+    const filteredDuplicates = images.filter((img) => {
+      if (!ids.includes(img.id)) {
+        ids.push(img.id);
+        return true;
+      }
+    });
+    if (images.length === filteredDuplicates.length) {
+      return;
+    }
+    setImages(filteredDuplicates);
+  }, [images]);
+
   useEffect(() => {
     fetchImageIds({
       images,
@@ -177,7 +193,6 @@ export const ImageSelector = () => {
             <div className={classes.buttonContainer}>
               <Button
                 onClick={() => {
-                  console.log(selectedImages);
                   handleSubmit({ notFound: false });
                 }}
                 size="large"

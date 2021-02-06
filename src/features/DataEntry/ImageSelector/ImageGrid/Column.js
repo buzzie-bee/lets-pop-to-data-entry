@@ -5,8 +5,21 @@ import { Image } from './Image';
 
 export const Column = ({ images, colNum, handleSelect, isSelected }) => {
   const classes = useStyles();
+  const validImages = images.filter((img) => {
+    if (!img) {
+      return false;
+    }
+    if (!('imageData' in img)) {
+      return false;
+    }
+    if (!('url' in img.imageData)) {
+      return false;
+    }
+    return true;
+  });
   return (
     <Grid
+      key={`column#${colNum}`}
       container
       item
       direction="column"
@@ -14,30 +27,21 @@ export const Column = ({ images, colNum, handleSelect, isSelected }) => {
       spacing={1}
       className={classes.column}
     >
-      {images.map((img, idx) => {
-        if (!img) {
-          return <></>;
-        }
-        if (!('imageData' in img)) {
-          return <></>;
-        }
-        if (!('url' in img.imageData)) {
-          return <></>;
-        }
-
+      {validImages.map((img, idx) => {
         const url = img.imageData.url;
         const imageClass = clsx(classes.image, {
           [classes.isSelected]: isSelected(img),
         });
         return (
           <Grid
+            key={`${img.id}`}
             item
             className={classes.gridItem}
             onClick={() => {
               handleSelect(img);
             }}
           >
-            <div className={classes.imageContainer}>
+            <div key={`div_for_${img.id}`} className={classes.imageContainer}>
               <Image imgClass={imageClass} key={`${url}`} img={img} />
             </div>
           </Grid>

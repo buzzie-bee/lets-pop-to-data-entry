@@ -44,15 +44,16 @@ export const ImageGrid = ({
         container
         direction="row"
         justify="center"
-        alignItems="space-between"
+        alignItems="flex-start"
         spacing={1}
       >
         {columns.map((images, idx) => (
           <Column
-            key={`column#${idx}`}
+            key={`columncontainer#${idx}`}
             images={images}
             handleSelect={handleSelect}
             isSelected={isSelected}
+            colNum={idx}
           />
         ))}
       </Grid>

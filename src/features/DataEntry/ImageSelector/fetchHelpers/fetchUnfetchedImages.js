@@ -10,7 +10,6 @@ export const fetchUnfetchedImages = async ({
     return;
   }
   setGatheringImages(true);
-  console.log('imgs before adding data =>', images);
   const updatedImages = await Promise.all(
     images.map(async (img) => {
       if (!('imageData' in img)) {
@@ -21,7 +20,6 @@ export const fetchUnfetchedImages = async ({
       return img;
     })
   );
-  console.log('imgs after adding data =>', updatedImages);
   setImages(updatedImages);
   setGatheringImages(false);
 };

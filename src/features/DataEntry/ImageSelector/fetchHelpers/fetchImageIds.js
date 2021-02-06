@@ -37,9 +37,6 @@ export const fetchImageIds = async ({
         if (imagesResponse.photos.photo) {
           if (Array.isArray(imagesResponse.photos.photo)) {
             const newPhotos = imagesResponse.photos.photo;
-            console.log('setting images!');
-            console.log('prev img => ', images);
-            console.log('new imgs => ', [...images, ...newPhotos]);
             setImages([...images, ...newPhotos]);
           }
         }

@@ -286,6 +286,11 @@ export const ImageSelector = () => {
               <TextField
                 value={tweakedSearch}
                 style={{ marginLeft: '24px' }}
+                onKeyPress={(e) => {
+                  if (e.code === 'Enter') {
+                    searchTweakedQuery();
+                  }
+                }}
                 onChange={(e) => {
                   e.preventDefault();
                   setTweakedSearch(e.target.value);

@@ -92,6 +92,7 @@ export const ImageSelector = () => {
     return selectedImages.filter((sImg) => sImg.id === img.id).length > 0;
   };
 
+  // TODO: Detect when images have loaded before rendering overlay
   const resetOverlay = () => {
     setShowOverlay(false);
     setTimeout(() => {

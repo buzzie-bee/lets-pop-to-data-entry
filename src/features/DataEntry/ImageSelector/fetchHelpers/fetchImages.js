@@ -23,7 +23,7 @@ export const fetchImages = async ({
       safe_search: '1',
       content_type: '1',
       media: 'photos',
-      per_page: 20,
+      per_page: 40,
       page: page,
       extras: 'url_m, url_l,owner_name',
     };

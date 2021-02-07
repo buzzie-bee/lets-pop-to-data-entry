@@ -10,7 +10,7 @@ This generated a json file with the same search query used in the lets pop to re
 
 This data is then entered into a firebase firestore no SQL database so that the front end can read the destinations and store the selected images there.
 
-I may upload the script to github so you can run it yourself sometime.
+_I may upload the script to github so others can run it sometime._
 
 ## Logging data
 
@@ -26,7 +26,15 @@ As this is a simple helper project I went with a KISS approach to security. Only
 
 ## Running locally
 
-Git clone this repo.
+Set up the code using:
+
+`git clone https://github.com/buzzie-bee/lets-pop-to-data-entry`
+
+and
+
+`npm install`
+
+##
 
 Create a firebase project with a firestore:
 [https://firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup)
@@ -35,13 +43,21 @@ Sign up to flickr and register for an api key:
 [https://www.flickr.com/services/apps/create/apply/](https://www.flickr.com/services/apps/create/apply/)
 
 Add your firebase and flickr keys to a .env file with the following names:
+
 REACT_APP_API_KEY={firebaseApiKey}
+
 REACT_APP_AUTH_DOMAIN={firebaseAuthDomain}
+
 REACT_APP_DATABASE_URL={firebaseDatabaseUrl}
+
 REACT_APP_PROJECT_ID={firebaseProjectId}
+
 REACT_APP_STORAGE_BUCKET={firebaseStorageBucket}
+
 REACT_APP_MESSAGING_SENDER_ID={firebaseMessagingSenderId}
+
 REACT_APP_APP_ID={firebaseAppId}
+
 REACT_APP_FLICKR_KEY={flickrApiKey}
 
 Next initialise your firestore with a 'locations' collection containing documents with your desired search queries.

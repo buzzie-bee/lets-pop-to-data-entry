@@ -1,70 +1,63 @@
-# Getting Started with Create React App
+# Lets Pop To Data Entry
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To reduce api calls to fetch images for each destination I built this helper app to breeze through selecting images using the Flickr API which are licensed to allow non-commerical projects to use them. This is a bit hacky as I just wanted to get it up and running to finish the Lets Pop To project quickly.
 
-## Available Scripts
+## Finding destinations
 
-In the project directory, you can run:
+I wrote a small python script to scrape the cached flight data from skyscanner.
 
-### `npm start`
+This generated a json file with the same search query used in the lets pop to requests as the key along with data like the iata code for the destination and how frequently it appears as a possible destination for a flight (for prioritising the image gathering).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This data is then entered into a firebase firestore no SQL database so that the front end can read the destinations and store the selected images there.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+I may upload the script to github so you can run it yourself sometime.
 
-### `npm test`
+## Logging data
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The app gathers the next image without an image URL by frequency, then queries the flickr api for images related to that destinations search query.
 
-### `npm run build`
+You can change the search query used for the flickr api request (i.e. a search for "Denpasar Airport Indonesia" should probably show images for the whole of Bali), change the ordering from flickr ('interestingness-desc' is the default as it produces interesting images, but sometimes 'relevance' to the search query produces better results).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Once images are selected you can submit them to be stored in the firestore document. Once that has successfully updated you will be redirected to an intermediary page where you can either continue logging or exit before the automatic redirect kicks in.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Security
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+As this is a simple helper project I went with a KISS approach to security. Only logged in users with the user ID of myself or the people helping me log results will be able to read/write to the firestore.
 
-### `npm run eject`
+## Running locally
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Git clone this repo.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Create a firebase project with a firestore:
+[https://firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Sign up to flickr and register for an api key:
+[https://www.flickr.com/services/apps/create/apply/](https://www.flickr.com/services/apps/create/apply/)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Add your firebase and flickr keys to a .env file with the following names:
+REACT_APP_API_KEY={firebaseApiKey}
+REACT_APP_AUTH_DOMAIN={firebaseAuthDomain}
+REACT_APP_DATABASE_URL={firebaseDatabaseUrl}
+REACT_APP_PROJECT_ID={firebaseProjectId}
+REACT_APP_STORAGE_BUCKET={firebaseStorageBucket}
+REACT_APP_MESSAGING_SENDER_ID={firebaseMessagingSenderId}
+REACT_APP_APP_ID={firebaseAppId}
+REACT_APP_FLICKR_KEY={flickrApiKey}
 
-## Learn More
+Next initialise your firestore with a 'locations' collection containing documents with your desired search queries.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Any queries and documents will do as long as they have an 'imgUrl' property and 'occurances' integer value.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+_I may upload the python scripts I used to scrape the destinations and upload to firestore on request._
 
-### Code Splitting
+If testing locally you may not need to add security rules to your firestore but if you do then secure it based on the uid make your read,write permissions:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+`request.auth.uid == "uid_person_1" || request.auth.uid == "uid_person_2";`
 
-### Analyzing the Bundle Size
+Now you **should** be in a position to `npm start` the project and play around with it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+As it's a hack it's not super responsive on mobile so I'd stick to desktop browsers.
 
-### Making a Progressive Web App
+## Any questions?
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Get in touch with me if you have any questions about this. As I've mentioned it's just something I bashed together to make data entry for selecting images a bit better so it's not feature rich, however it's definitely a good enough mvp to let me execute my plan to source images myself.

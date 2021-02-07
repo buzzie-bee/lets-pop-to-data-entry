@@ -42,7 +42,9 @@ Create a firebase project with a firestore:
 Sign up to flickr and register for an api key:
 [https://www.flickr.com/services/apps/create/apply/](https://www.flickr.com/services/apps/create/apply/)
 
-Add your firebase and flickr keys to a .env file with the following names:
+##
+
+Add your firebase and flickr keys to a `.env` file with the following names:
 
 REACT_APP_API_KEY={firebaseApiKey}
 
@@ -60,15 +62,21 @@ REACT_APP_APP_ID={firebaseAppId}
 
 REACT_APP_FLICKR_KEY={flickrApiKey}
 
+##
+
 Next initialise your firestore with a 'locations' collection containing documents with your desired search queries.
 
 Any queries and documents will do as long as they have an 'imgUrl' property and 'occurances' integer value.
 
 _I may upload the python scripts I used to scrape the destinations and upload to firestore on request._
 
+##
+
 If testing locally you may not need to add security rules to your firestore but if you do then secure it based on the uid make your read,write permissions:
 
 `request.auth.uid == "uid_person_1" || request.auth.uid == "uid_person_2";`
+
+##
 
 Now you **should** be in a position to `npm start` the project and play around with it.
 

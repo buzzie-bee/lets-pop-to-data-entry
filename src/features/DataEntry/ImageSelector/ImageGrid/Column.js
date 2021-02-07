@@ -9,10 +9,7 @@ export const Column = ({ images, colNum, handleSelect, isSelected }) => {
     if (!img) {
       return false;
     }
-    if (!('imageData' in img)) {
-      return false;
-    }
-    if (!('url' in img.imageData)) {
+    if (!('url_l' in img)) {
       return false;
     }
     return true;
@@ -28,7 +25,7 @@ export const Column = ({ images, colNum, handleSelect, isSelected }) => {
       className={classes.column}
     >
       {validImages.map((img, idx) => {
-        const url = img.imageData.url;
+        const url = img.url_l;
         const imageClass = clsx(classes.image, {
           [classes.isSelected]: isSelected(img),
         });

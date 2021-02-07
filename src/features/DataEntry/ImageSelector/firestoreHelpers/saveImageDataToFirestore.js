@@ -19,7 +19,7 @@ export const saveImageDataToFirestore = async ({
         }
       : {
           images: selectedImages,
-          imgUrl: selectedImages[0].imageData.url,
+          imgUrl: selectedImages[0].url_l,
         };
 
     const result = await locationsRef

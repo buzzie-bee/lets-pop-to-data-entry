@@ -1,12 +1,13 @@
 import { stringify } from 'query-string';
 
-export const fetchImageIds = async ({
+export const fetchImages = async ({
   searchQuery,
   page,
   setTotalResults,
   setImages,
   images,
   searchType,
+  setLoading,
 }) => {
   try {
     const url = 'https://www.flickr.com/services/rest/';
@@ -24,6 +25,7 @@ export const fetchImageIds = async ({
       media: 'photos',
       per_page: 20,
       page: page,
+      extras: 'url_m, url_l,owner_name',
     };
     const paramString = stringify(params);
     const response = await fetch(`${url}?${paramString}`);
@@ -38,6 +40,7 @@ export const fetchImageIds = async ({
           if (Array.isArray(imagesResponse.photos.photo)) {
             const newPhotos = imagesResponse.photos.photo;
             setImages([...images, ...newPhotos]);
+            setLoading(false);
           }
         }
       }

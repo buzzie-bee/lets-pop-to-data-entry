@@ -14,8 +14,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { ImageGrid } from './ImageGrid/ImageGrid';
-import { fetchImageIds } from './fetchHelpers/fetchImageIds';
-import { fetchUnfetchedImages } from './fetchHelpers/fetchUnfetchedImages';
+import { fetchImages } from './fetchHelpers/fetchImages';
 import { saveImageDataToFirestore } from './firestoreHelpers/saveImageDataToFirestore';
 import { setAsPendingInFirestore } from './firestoreHelpers/setAsPendingInFirestore';
 
@@ -24,7 +23,6 @@ export const ImageSelector = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [searchType, setSearchType] = useState('interestingness-desc');
   const [loading, setLoading] = useState(true);
-  const [gatheringImages, setGatheringImages] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [dialogueOpen, setDialogOpen] = useState(false);
@@ -33,30 +31,6 @@ export const ImageSelector = () => {
   const [tweakedSearch, setTweakedSearch] = useState(searchQuery);
   const classes = useStyles();
   const history = useHistory();
-
-  useEffect(() => {
-    fetchImageIds({
-      images,
-      page,
-      searchQuery: tweakedSearch,
-      setImages,
-      setTotalResults,
-      searchType,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  useEffect(() => {
-    if (!gatheringImages) {
-      fetchUnfetchedImages({
-        setImages,
-        images,
-        setGatheringImages,
-        setLoading,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [images]);
 
   // Cleanup images
   useEffect(() => {
@@ -72,20 +46,33 @@ export const ImageSelector = () => {
     if (images.length === filteredDuplicates.length) {
       return;
     }
-    setImages(filteredDuplicates);
+    const imgWithFlickrUrl = filteredDuplicates.map((img) => {
+      if (img) {
+        if ('owner' in img) {
+          if ('id' in img) {
+            const { id, owner } = img;
+            const flickrUrl = `https://www.flickr.com/photos/${owner}/${id}`;
+            img.flickrUrl = flickrUrl;
+          }
+        }
+      }
+      return img;
+    });
+    setImages(imgWithFlickrUrl);
   }, [images]);
 
   useEffect(() => {
-    fetchImageIds({
+    fetchImages({
       images,
       page,
       searchQuery: tweakedSearch,
       setImages,
       setTotalResults,
       searchType,
+      setLoading,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, [searchQuery, page]);
 
   useEffect(() => {
     setAsPendingInFirestore({ searchQuery });
@@ -125,7 +112,6 @@ export const ImageSelector = () => {
     setImages([]);
     setSelectedImages([]);
     setLoading(true);
-    setGatheringImages(false);
     setPage(0);
     setTotalResults(0);
     setDialogOpen(false);

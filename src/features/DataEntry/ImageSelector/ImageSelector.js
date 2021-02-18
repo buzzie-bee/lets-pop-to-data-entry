@@ -85,6 +85,7 @@ export const ImageSelector = () => {
       setSelectedImages(filtered);
       return;
     }
+    img.flickrUrl = `https://www.flickr.com/photos/${img.owner}/${img.id}`;
     setSelectedImages([...selectedImages, img]);
   };
 
